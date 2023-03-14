@@ -1,0 +1,31 @@
+<idea-plugin>
+  <id>com.redhat.devtools.intellij.jkube</id>
+  <name>JKube by Red Hat</name>
+  <version>1.0</version>
+  <vendor email="developers@redhat.com" url="http://www.redhat.com">Red-Hat</vendor>
+
+  <description><![CDATA[
+    ]]></description>
+
+  <change-notes><![CDATA[
+    ]]>
+  </change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="213"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow id="JKube" anchor="left" factoryClass="com.redhat.devtools.intellij.jkube.window.JKubeWindowFactory" icon="/META-INF/OpenShiftPluginIcon13x13.svg"/>
+ </extensions>
+
+  <actions>
+      <group id="com.redhat.devtools.intellij.jkube.tree" popup="true">
+          <action class="com.redhat.devtools.intellij.jkube.actions.StartRemoteDevAction" id="com.redhat.devtools.intellij.jkube.actions.StartRemoteDevAction" text="Bind locally"/>
+      </group>
+  </actions>
+
+</idea-plugin>

@@ -1,0 +1,131 @@
+
+plugins {
+    id "org.jetbrains.intellij" version "1.12.0"
+    id "com.adarshr.test-logger" version "3.2.0"
+    id "idea"
+    id "java"
+    id "jacoco"
+    id "org.sonarqube" version "3.0"
+}
+
+repositories {
+    mavenLocal()
+    maven { url 'https://repository.jboss.org' }
+    mavenCentral()
+    maven { url 'https://packages.jetbrains.team/maven/p/ij/intellij-dependencies' }
+}
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
+
+intellij {
+    version = ideaVersion //for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
+    pluginName = 'Eclipse JKube by Red Hat'
+    // use '<git repo clone>/build/idea-sandbox/plugins/<plugin>' if working from source
+    plugins = [
+            'com.redhat.devtools.intellij.telemetry:0.0.3.33'
+    ]
+	updateSinceUntilBuild = false
+}
+
+//with this option enabled, build will fail about IDEA expiration builds
+buildSearchableOptions.enabled = false
+
+runPluginVerifier {
+    ideVersions = [ideaVersion]
+}
+
+publishPlugin {
+    token = jetBrainsToken
+    channels = [jetBrainsChannel]
+}
+
+configurations {
+    implementation {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+sourceSets {
+    integrationTest {
+        java.srcDir file('src/it/java')
+        resources.srcDir file('src/it/resources')
+        compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+task integrationTest(type: Test) {
+    systemProperties['com.redhat.devtools.intellij.telemetry.mode'] = 'debug'
+    description = 'Runs the integration tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+    mustRunAfter test
+    testlogger {
+        showStandardStreams true
+        showPassedStandardStreams false
+        showSkippedStandardStreams false
+        showFailedStandardStreams true
+        showFullStackTraces true
+    }
+}
+
+task integrationUITest(type: Test) {
+    useJUnitPlatform {
+    	includeTags 'ui-test'
+    }
+    description = 'Runs the integration UI tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { true }
+    mustRunAfter test
+}
+
+dependencies {
+    implementation(
+            'io.fabric8:openshift-client:6.4.0',
+            'org.eclipse.jkube:jkube-kit-remote-dev:1.11.0',
+            'com.redhat.devtools.intellij:intellij-common:1.9.0')
+    testImplementation(
+            'com.redhat.devtools.intellij:intellij-common:1.9.0:test',
+            'com.redhat.devtools.intellij:intellij-common-ui-test-library:0.2.0',
+            'org.junit.jupiter:junit-jupiter-engine:5.9.2',
+            'org.junit.jupiter:junit-jupiter-api:5.9.2',
+            'org.junit.jupiter:junit-jupiter:5.9.2')
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "redhat-developer_intellij-openshift-connector"
+        property "sonar.organization", "redhat-developer"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.junit.reportsPath", "$buildDir/test-results/"
+    }
+}
+
+jacocoTestReport {
+    getExecutionData().setFrom(fileTree(buildDir).include("/jacoco/*.exec"))
+    reports {
+        xml.enabled = true
+    }
+}
+
+runIde {
+    systemProperties['com.redhat.devtools.intellij.telemetry.mode'] = 'debug'
+    //systemProperties['jboss.sandbox.api.endpoint'] = 'http://localhost:3000'
+}
+
+task runSandbox(type: JavaExec) {
+    group = "Execution"
+    description = "Run the Sandbox registration server in port 3000"
+    classpath = sourceSets.test.runtimeClasspath
+    main = 'org.jboss.tools.intellij.openshift.ui.sandbox.SandboxRegistrationServerMock'
+}
+
+group 'org.jboss.tools.intellij'
+version projectVersion // Plugin version
