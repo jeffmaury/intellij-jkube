@@ -59,8 +59,8 @@ public class StartRemoteDevAction extends StructureTreeAction implements DumbAwa
             var handler = new RemoteDevHandler(service, logger, node.getPort());
             node.setHandler(handler);
             handler.start().handle((res, err) -> {
+                node.setHandler(null);
                if (err != null) {
-                   node.setHandler(null);
                    Messages.showErrorDialog(anActionEvent.getProject(), "Can't forward locally port " + node.getPort() +
                            "' for service " + node.getParent().getService().getMetadata().getName() + " error:" + err.getLocalizedMessage(), "Error");
                }

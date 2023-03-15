@@ -27,7 +27,12 @@ public class RemoteDevHandler {
         }
     }
 
+    public void stop() {
+        service.stop();
+    }
+
     public int getLocalPort() {
         return port;
     }
+
 }
