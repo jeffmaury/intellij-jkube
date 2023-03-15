@@ -36,6 +36,15 @@ public class StartRemoteDevAction extends StructureTreeAction implements DumbAwa
     }
 
     @Override
+    public boolean isVisible(Object selected) {
+        var visible = super.isVisible(selected);
+        if (visible) {
+            visible = ((PortNode) selected).getHandler() == null;
+        }
+        return visible;
+    }
+
+    @Override
     public void actionPerformed(AnActionEvent anActionEvent, TreePath path, Object selected) {
             PortNode node = getElement(selected);
             var remoteService = RemoteService.builder()
@@ -62,17 +71,10 @@ public class StartRemoteDevAction extends StructureTreeAction implements DumbAwa
             var notification = new Notification(Constants.NOTIFICATION_GROUP_ID, "JKube", content,
                     NotificationType.INFORMATION);
             notification.addAction(NotificationAction.createExpiring("Open browser", (e,n) -> {
-                openBrowser(node.getPort(), e.getProject());
+                OpenBrowserAction.openBrowser(node.getPort(), e.getProject());
             }));
             Notifications.Bus.notify(notification, anActionEvent.getProject());
 
 
-    }
-
-    private void openBrowser(int port, Project project) {
-        var url = "http://localhost:" + port;
-        var file = new LightVirtualFile(url);
-        var previewFile = new WebPreviewVirtualFile(file, Urls.newFromEncoded(url));
-        FileEditorManager.getInstance(project).openFile(previewFile, true, true);
     }
 }
