@@ -19,7 +19,7 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="JKube" anchor="left" factoryClass="com.redhat.devtools.intellij.jkube.window.JKubeWindowFactory" icon="/META-INF/OpenShiftPluginIcon13x13.svg"/>
+    <toolWindow id="JKube" anchor="right" factoryClass="com.redhat.devtools.intellij.jkube.window.JKubeWindowFactory" icon="/META-INF/OpenShiftPluginIcon13x13.svg"/>
  </extensions>
 
   <actions>

@@ -14,6 +14,7 @@ import com.intellij.util.Urls;
 import com.redhat.devtools.intellij.common.actions.StructureTreeAction;
 import com.redhat.devtools.intellij.jkube.Constants;
 import com.redhat.devtools.intellij.jkube.window.PortNode;
+import com.redhat.devtools.intellij.jkube.window.TerminalLogger;
 import org.eclipse.jkube.kit.common.KitLogger;
 import org.eclipse.jkube.kit.common.util.Slf4jKitLogger;
 import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentConfig;
@@ -41,10 +42,11 @@ public class StartRemoteDevAction extends StructureTreeAction {
                     .port(node.getPort())
                     .build();
             var config = RemoteDevelopmentConfig.builder().remoteService(remoteService).build();
-            var logger = new Slf4jKitLogger(LOGGER);
+            var logger = new TerminalLogger(remoteService.getHostname() + ':' + remoteService.getPort(),
+                    anActionEvent.getProject());
             var service = new RemoteDevelopmentService(logger, node.getParent().getParent().getParent().getClient(), config);
-        try {
-            service.start().handle((res, err) -> {
+            var handler = new RemoteDevHandler(service, logger);
+            handler.start().handle((res, err) -> {
                if (err != null) {
                    Messages.showErrorDialog(anActionEvent.getProject(), "Can't forward locally port " + node.getPort() +
                            "' for service " + node.getParent().getService().getMetadata().getName() + " error:" + err.getLocalizedMessage(), "Error");
@@ -59,10 +61,7 @@ public class StartRemoteDevAction extends StructureTreeAction {
                 openBrowser(node.getPort(), e.getProject());
             }));
             Notifications.Bus.notify(notification, anActionEvent.getProject());
-        } catch (RuntimeException e) {
-            Messages.showErrorDialog(anActionEvent.getProject(), "Can't forward locally port " + node.getPort() +
-                    "' for service " + node.getParent().getService().getMetadata().getName(), "Error");
-        }
+
 
     }
 
