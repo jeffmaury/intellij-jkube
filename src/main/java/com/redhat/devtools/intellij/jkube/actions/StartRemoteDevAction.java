@@ -7,6 +7,7 @@ import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.testFramework.LightVirtualFile;
@@ -27,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.tree.TreePath;
 import java.util.Collections;
 
-public class StartRemoteDevAction extends StructureTreeAction {
+public class StartRemoteDevAction extends StructureTreeAction implements DumbAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(StartRemoteDevAction.class);
 
     public StartRemoteDevAction() {
@@ -44,10 +45,13 @@ public class StartRemoteDevAction extends StructureTreeAction {
             var config = RemoteDevelopmentConfig.builder().remoteService(remoteService).build();
             var logger = new TerminalLogger(remoteService.getHostname() + ':' + remoteService.getPort(),
                     anActionEvent.getProject());
-            var service = new RemoteDevelopmentService(logger, node.getParent().getParent().getParent().getClient(), config);
-            var handler = new RemoteDevHandler(service, logger);
+            var service = new RemoteDevelopmentService(logger, node.getParent().getParent().getParent().getClient(),
+                    config);
+            var handler = new RemoteDevHandler(service, logger, node.getPort());
+            node.setHandler(handler);
             handler.start().handle((res, err) -> {
                if (err != null) {
+                   node.setHandler(null);
                    Messages.showErrorDialog(anActionEvent.getProject(), "Can't forward locally port " + node.getPort() +
                            "' for service " + node.getParent().getService().getMetadata().getName() + " error:" + err.getLocalizedMessage(), "Error");
                }

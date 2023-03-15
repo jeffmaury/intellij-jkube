@@ -2,6 +2,7 @@ package com.redhat.devtools.intellij.jkube.window;
 
 import com.intellij.ide.util.treeView.NodeRenderer;
 import com.intellij.openapi.actionSystem.ActionPlaces;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.BorderLayout;
 
-public class JKubeWindowFactory implements ToolWindowFactory {
+public class JKubeWindowFactory implements ToolWindowFactory, DumbAware {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
@@ -28,8 +29,8 @@ public class JKubeWindowFactory implements ToolWindowFactory {
         JBPanel<JBPanel> panel = new JBPanel<>();
         panel.setLayout(new BorderLayout());
         Content content = contentFactory.createContent(panel, "", false);
-        WindowTreeStructure structure = new WindowTreeStructure(project);
-        StructureTreeModel<WindowTreeStructure> model = new StructureTreeModel<>(structure, content);
+        JKubeTreeStructure structure = new JKubeTreeStructure(project);
+        StructureTreeModel<JKubeTreeStructure> model = new StructureTreeModel<>(structure, content);
         new MutableModelSynchronizer<>(model, structure, structure);
         Tree tree = new Tree(new AsyncTreeModel(model, content));
         tree.putClientProperty(Constants.STRUCTURE_PROPERTY, structure);
