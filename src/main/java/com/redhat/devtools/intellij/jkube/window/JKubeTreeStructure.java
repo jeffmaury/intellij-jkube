@@ -7,6 +7,7 @@ import com.redhat.devtools.intellij.common.tree.LabelAndIconDescriptor;
 import com.redhat.devtools.intellij.common.tree.MutableModel;
 import com.redhat.devtools.intellij.common.tree.MutableModelSupport;
 import com.redhat.devtools.intellij.jkube.Icons;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,9 +37,13 @@ public class JKubeTreeStructure extends AbstractTreeStructure implements Mutable
         if (element == root) {
             return new Object[]{new RemoteServicesNode(root)};
         } else if (element instanceof RemoteServicesNode) {
-            return root.getClient().services().list().getItems().stream()
-                    .map(service -> new ServiceNode(service, (RemoteServicesNode) element))
-                    .toArray();
+            try {
+                return root.getClient().services().list().getItems().stream()
+                        .map(service -> new ServiceNode(service, (RemoteServicesNode) element))
+                        .toArray();
+            } catch (KubernetesClientException e) {
+                return new Object[0];
+            }
         } else if (element instanceof ServiceNode) {
             return ((ServiceNode) element).getService().getSpec().getPorts().stream()
                     .map(port -> PortNode.fromServicePort(port, (ServiceNode) element))

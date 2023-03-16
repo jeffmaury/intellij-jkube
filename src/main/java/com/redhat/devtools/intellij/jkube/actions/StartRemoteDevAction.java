@@ -14,6 +14,8 @@ import com.intellij.testFramework.LightVirtualFile;
 import com.intellij.util.Urls;
 import com.redhat.devtools.intellij.common.actions.StructureTreeAction;
 import com.redhat.devtools.intellij.jkube.Constants;
+import com.redhat.devtools.intellij.jkube.Utils;
+import com.redhat.devtools.intellij.jkube.dialogs.RemotePortDialog;
 import com.redhat.devtools.intellij.jkube.window.PortNode;
 import com.redhat.devtools.intellij.jkube.window.TerminalLogger;
 import org.eclipse.jkube.kit.common.KitLogger;
@@ -46,35 +48,39 @@ public class StartRemoteDevAction extends StructureTreeAction implements DumbAwa
 
     @Override
     public void actionPerformed(AnActionEvent anActionEvent, TreePath path, Object selected) {
-            PortNode node = getElement(selected);
+        PortNode node = getElement(selected);
+        var serviceName = node.getParent().getService().getMetadata().getName();
+        var dialog = new RemotePortDialog(serviceName, node.getPort(), Utils.findFirstAvailablePort(node.getPort()),
+                anActionEvent.getProject());
+        if (dialog.showAndGet()) {
             var remoteService = RemoteService.builder()
-                    .hostname(node.getParent().getService().getMetadata().getName())
+                    .hostname(serviceName)
                     .port(node.getPort())
+                    .localPort(dialog.getLocalPort())
                     .build();
             var config = RemoteDevelopmentConfig.builder().remoteService(remoteService).build();
             var logger = new TerminalLogger(remoteService.getHostname() + ':' + remoteService.getPort(),
                     anActionEvent.getProject());
             var service = new RemoteDevelopmentService(logger, node.getParent().getParent().getParent().getClient(),
                     config);
-            var handler = new RemoteDevHandler(service, logger, node.getPort());
+            var handler = new RemoteDevHandler(service, logger, remoteService.getLocalPort());
             node.setHandler(handler);
             handler.start().handle((res, err) -> {
                 node.setHandler(null);
-               if (err != null) {
-                   Messages.showErrorDialog(anActionEvent.getProject(), "Can't forward locally port " + node.getPort() +
-                           "' for service " + node.getParent().getService().getMetadata().getName() + " error:" + err.getLocalizedMessage(), "Error");
-               }
-               return res;
+                if (err != null) {
+                    Messages.showErrorDialog(anActionEvent.getProject(), "Can't forward locally port " + node.getPort() +
+                            "' for service " + node.getParent().getService().getMetadata().getName() + " error:" + err.getLocalizedMessage(), "Error");
+                }
+                return res;
             });
-            var content = "Port " + node.getPort() + " available locally for service " +
-                    node.getParent().getService().getMetadata().getName();
+            var content = "Port " + remoteService.getLocalPort() + " available locally for service " +
+                    serviceName;
             var notification = new Notification(Constants.NOTIFICATION_GROUP_ID, "JKube", content,
                     NotificationType.INFORMATION);
             notification.addAction(NotificationAction.createExpiring("Open browser", (e,n) -> {
                 OpenBrowserAction.openBrowser(node.getPort(), e.getProject());
             }));
             Notifications.Bus.notify(notification, anActionEvent.getProject());
-
-
+        }
     }
 }
