@@ -31,7 +31,7 @@ public class RemotePortDialog extends DialogWrapper {
     public RemotePortDialog(String serviceName, int remotePort, int localPort, Project project) {
         super(project, false, IdeModalityType.PROJECT);
         init();
-        setTitle("RemoteDev");
+        setTitle("Remote service");
         serviceNameLabel.setText(serviceName);
         remotePortLabel.setText(Integer.toString(remotePort));
         localPortText.setText(Integer.toString(localPort));
@@ -58,7 +58,7 @@ public class RemotePortDialog extends DialogWrapper {
             }
         } catch (NumberFormatException e) {
             setOKActionEnabled(false);
-            setErrorText("Port number must be numeric", localPortText);
+            setErrorText("Port number must be an integer", localPortText);
         }
     }
 

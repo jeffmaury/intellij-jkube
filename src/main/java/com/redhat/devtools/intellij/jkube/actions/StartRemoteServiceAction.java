@@ -1,39 +1,30 @@
 package com.redhat.devtools.intellij.jkube.actions;
 
-import com.intellij.ide.browsers.actions.WebPreviewVirtualFile;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.Urls;
 import com.redhat.devtools.intellij.common.actions.StructureTreeAction;
 import com.redhat.devtools.intellij.jkube.Constants;
 import com.redhat.devtools.intellij.jkube.Utils;
 import com.redhat.devtools.intellij.jkube.dialogs.RemotePortDialog;
 import com.redhat.devtools.intellij.jkube.window.PortNode;
 import com.redhat.devtools.intellij.jkube.window.TerminalLogger;
-import org.eclipse.jkube.kit.common.KitLogger;
-import org.eclipse.jkube.kit.common.util.Slf4jKitLogger;
 import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentConfig;
-import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentContext;
 import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentService;
 import org.eclipse.jkube.kit.remotedev.RemoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.tree.TreePath;
-import java.util.Collections;
 
-public class StartRemoteDevAction extends StructureTreeAction implements DumbAware {
-    private static final Logger LOGGER = LoggerFactory.getLogger(StartRemoteDevAction.class);
+public class StartRemoteServiceAction extends StructureTreeAction implements DumbAware {
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartRemoteServiceAction.class);
 
-    public StartRemoteDevAction() {
+    public StartRemoteServiceAction() {
         super(PortNode.class);
     }
 
@@ -63,7 +54,7 @@ public class StartRemoteDevAction extends StructureTreeAction implements DumbAwa
                     anActionEvent.getProject());
             var service = new RemoteDevelopmentService(logger, node.getParent().getParent().getParent().getClient(),
                     config);
-            var handler = new RemoteDevHandler(service, logger, remoteService.getLocalPort());
+            var handler = new RemoteServiceHandler(service, logger, remoteService.getLocalPort());
             node.setHandler(handler);
             handler.start().handle((res, err) -> {
                 node.setHandler(null);
@@ -78,7 +69,7 @@ public class StartRemoteDevAction extends StructureTreeAction implements DumbAwa
             var notification = new Notification(Constants.NOTIFICATION_GROUP_ID, "JKube", content,
                     NotificationType.INFORMATION);
             notification.addAction(NotificationAction.createExpiring("Open browser", (e,n) -> {
-                OpenBrowserAction.openBrowser(node.getPort(), e.getProject());
+                OpenBrowserAction.openBrowser(remoteService.getLocalPort(), e.getProject());
             }));
             Notifications.Bus.notify(notification, anActionEvent.getProject());
         }

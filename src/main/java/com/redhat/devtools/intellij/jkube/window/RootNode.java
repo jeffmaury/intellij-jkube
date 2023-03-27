@@ -7,6 +7,8 @@ import io.fabric8.openshift.api.model.operator.v1.KubeAPIServerBuilder;
 public class RootNode implements Node<Void> {
     private final KubernetesClient client;
     private final JKubeTreeStructure structure;
+    private final MessageNode<RootNode> localServicesNode;
+    private final MessageNode<RootNode> remoteServicesNode;
 
     @Override
     public Void getParent() {
@@ -16,6 +18,8 @@ public class RootNode implements Node<Void> {
     public RootNode(JKubeTreeStructure structure) {
         this.structure = structure;
         this.client = new KubernetesClientBuilder().build();
+        this.localServicesNode = new LocalServicesNode(this);
+        this.remoteServicesNode = new MessageNode<RootNode>("RemoteServices", this);
     }
 
     public JKubeTreeStructure getStructure() {
@@ -24,5 +28,13 @@ public class RootNode implements Node<Void> {
 
     public KubernetesClient getClient() {
         return client;
+    }
+
+    public MessageNode<RootNode> getLocalServicesNode() {
+        return localServicesNode;
+    }
+
+    public MessageNode<RootNode> getRemoteServicesNode() {
+        return remoteServicesNode;
     }
 }

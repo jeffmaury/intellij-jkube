@@ -35,11 +35,11 @@ public class JKubeTreeStructure extends AbstractTreeStructure implements Mutable
     @Override
     public Object @NotNull [] getChildElements(@NotNull Object element) {
         if (element == root) {
-            return new Object[]{new RemoteServicesNode(root)};
-        } else if (element instanceof RemoteServicesNode) {
+            return new Object[]{ root.getLocalServicesNode(), root.getRemoteServicesNode()};
+        } else if (element == root.getRemoteServicesNode()) {
             try {
                 return root.getClient().services().list().getItems().stream()
-                        .map(service -> new ServiceNode(service, (RemoteServicesNode) element))
+                        .map(service -> new ServiceNode(service, (MessageNode) element))
                         .toArray();
             } catch (KubernetesClientException e) {
                 return new Object[0];
@@ -49,6 +49,8 @@ public class JKubeTreeStructure extends AbstractTreeStructure implements Mutable
                     .map(port -> PortNode.fromServicePort(port, (ServiceNode) element))
                     .filter(Objects::nonNull)
                     .toArray();
+        } else if (element instanceof LocalServicesNode) {
+            return ((LocalServicesNode) element).getChilds().toArray();
         }
         return new Object[0];
     }
@@ -67,8 +69,8 @@ public class JKubeTreeStructure extends AbstractTreeStructure implements Mutable
         if (element == root) {
             return new LabelAndIconDescriptor(project, element, root.getClient().getMasterUrl().toString(), Icons.CLUSTER,
                     parentDescriptor);
-        } else if (element instanceof RemoteServicesNode) {
-            return new LabelAndIconDescriptor(project, element, "Remote services",
+        } else if (element instanceof MessageNode) {
+            return new LabelAndIconDescriptor(project, element, ((MessageNode<?>) element).getLabel(),
                     Icons.REMOTE, parentDescriptor);
         } else if (element instanceof ServiceNode) {
             return new LabelAndIconDescriptor(project, element, ((ServiceNode) element).getService().getMetadata().getName(),

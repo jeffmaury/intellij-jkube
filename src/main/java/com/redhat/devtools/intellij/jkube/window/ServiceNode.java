@@ -2,16 +2,16 @@ package com.redhat.devtools.intellij.jkube.window;
 
 import io.fabric8.kubernetes.api.model.Service;
 
-public class ServiceNode implements Node<RemoteServicesNode> {
+public class ServiceNode implements Node<MessageNode<RootNode>> {
     private final Service service;
-    private final RemoteServicesNode parent;
+    private final MessageNode parent;
 
-    public ServiceNode(Service service, RemoteServicesNode parent) {
+    public ServiceNode(Service service, MessageNode<RootNode> parent) {
         this.service = service;
         this.parent = parent;
     }
     @Override
-    public RemoteServicesNode getParent() {
+    public MessageNode<RootNode> getParent() {
         return parent;
     }
 

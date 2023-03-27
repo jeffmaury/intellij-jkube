@@ -24,9 +24,10 @@
 
   <actions>
       <group id="com.redhat.devtools.intellij.jkube.tree" popup="true">
-          <action class="com.redhat.devtools.intellij.jkube.actions.StartRemoteDevAction" id="com.redhat.devtools.intellij.jkube.actions.StartRemoteDevAction" text="Bind locally"/>
-          <action class="com.redhat.devtools.intellij.jkube.actions.StopRemoteDevAction" id="com.redhat.devtools.intellij.jkube.actions.StopRemoteDevAction" text="Stop local port"/>
+          <action class="com.redhat.devtools.intellij.jkube.actions.StartRemoteServiceAction" id="com.redhat.devtools.intellij.jkube.actions.StartRemoteServiceAction" text="Bind locally"/>
+          <action class="com.redhat.devtools.intellij.jkube.actions.StopRemoteServiceAction" id="com.redhat.devtools.intellij.jkube.actions.StopRemoteServiceAction" text="Stop local port"/>
           <action class="com.redhat.devtools.intellij.jkube.actions.OpenBrowserAction" id="com.redhat.devtools.intellij.jkube.actions.OpenBrowserAction" text="Open browser"/>
+          <action class="com.redhat.devtools.intellij.jkube.actions.StartLocalServiceAction" id="StartLocalServiceAction" text="Expose port as service on cluster"/>
       </group>
   </actions>
 

@@ -1,18 +1,16 @@
 package com.redhat.devtools.intellij.jkube.actions;
 
 import com.redhat.devtools.intellij.jkube.window.TerminalLogger;
-import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentContext;
 import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentService;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 
-public class RemoteDevHandler {
+public class RemoteServiceHandler {
     private final RemoteDevelopmentService service;
     private final TerminalLogger logger;
     private final int port;
 
-    public RemoteDevHandler(RemoteDevelopmentService service, TerminalLogger logger, int port) {
+    public RemoteServiceHandler(RemoteDevelopmentService service, TerminalLogger logger, int port) {
         this.service = service;
         this.logger = logger;
         this.port = port;
