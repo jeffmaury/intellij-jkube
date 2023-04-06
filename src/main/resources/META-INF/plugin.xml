@@ -5,6 +5,8 @@
   <vendor email="developers@redhat.com" url="http://www.redhat.com">Red-Hat</vendor>
 
   <description><![CDATA[
+  <h2>Eclipse JKube Tools for IntelliJ</h2>
+  <p>A plugin allowing to use Eclipse JKube features</p>
     ]]></description>
 
   <change-notes><![CDATA[
