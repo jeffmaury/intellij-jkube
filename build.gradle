@@ -88,7 +88,7 @@ task integrationUITest(type: Test) {
 
 dependencies {
     implementation(
-            'io.fabric8:openshift-client:6.4.0',
+            'io.fabric8:openshift-client:6.5.1',
             'org.eclipse.jkube:jkube-kit-remote-dev:1.12.0',
             'com.redhat.devtools.intellij:intellij-common:1.9.0')
     testImplementation(
