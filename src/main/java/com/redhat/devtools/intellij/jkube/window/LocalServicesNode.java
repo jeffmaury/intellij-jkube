@@ -1,18 +1,17 @@
 package com.redhat.devtools.intellij.jkube.window;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class LocalServicesNode extends MessageNode<RootNode> {
 
-    private List<MessageNode<LocalServicesNode>> childs = new ArrayList<>();
+    private List<LocalServiceNode> childs = new ArrayList<>();
 
     public LocalServicesNode(RootNode parent) {
         super("Local services", parent);
     }
 
-    public void addChild(MessageNode<LocalServicesNode> child) {
+    public void addChild(LocalServiceNode child) {
         childs.add(child);
         getParent().getStructure().fireAdded(child);
     }
@@ -22,7 +21,7 @@ public class LocalServicesNode extends MessageNode<RootNode> {
         getParent().getStructure().fireRemoved(child);
     }
 
-    public List<MessageNode<LocalServicesNode>> getChilds() {
+    public List<LocalServiceNode> getChilds() {
         return childs;
     }
 }

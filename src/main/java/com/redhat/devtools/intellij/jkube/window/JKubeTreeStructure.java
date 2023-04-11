@@ -69,15 +69,19 @@ public class JKubeTreeStructure extends AbstractTreeStructure implements Mutable
         if (element == root) {
             return new LabelAndIconDescriptor(project, element, root.getClient().getMasterUrl().toString(), Icons.CLUSTER,
                     parentDescriptor);
-        } else if (element instanceof MessageNode) {
-            return new LabelAndIconDescriptor(project, element, ((MessageNode<?>) element).getLabel(),
-                    Icons.REMOTE, parentDescriptor);
         } else if (element instanceof ServiceNode) {
             return new LabelAndIconDescriptor(project, element, ((ServiceNode) element).getService().getMetadata().getName(),
                     Icons.SERVICE, parentDescriptor);
         } else if (element instanceof PortNode) {
             return new LabelAndIconDescriptor(project, element, () -> getPortNodeLabel((PortNode) element),
                     () -> Icons.PORT, parentDescriptor);
+        } else if (element instanceof LocalServiceNode) {
+            return new LabelAndIconDescriptor(project, element, ((LocalServiceNode) element).getLabel(),
+                    Icons.SERVICE, parentDescriptor);
+
+        } else if (element instanceof MessageNode) {
+            return new LabelAndIconDescriptor(project, element, ((MessageNode<?>) element).getLabel(),
+                    Icons.REMOTE, parentDescriptor);
         }
         return null;
     }

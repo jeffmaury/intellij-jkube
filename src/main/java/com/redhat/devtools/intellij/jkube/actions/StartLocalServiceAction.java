@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.Messages;
 import com.redhat.devtools.intellij.common.actions.StructureTreeAction;
 import com.redhat.devtools.intellij.jkube.Constants;
 import com.redhat.devtools.intellij.jkube.dialogs.LocalServiceDialog;
+import com.redhat.devtools.intellij.jkube.window.LocalServiceNode;
 import com.redhat.devtools.intellij.jkube.window.LocalServicesNode;
 import com.redhat.devtools.intellij.jkube.window.MessageNode;
 import com.redhat.devtools.intellij.jkube.window.RootNode;
@@ -41,7 +42,7 @@ public class StartLocalServiceAction extends StructureTreeAction implements Dumb
             var config = RemoteDevelopmentConfig.builder().localService(localService).build();
             var logger = new TerminalLogger("localhost:" + port,
                     anActionEvent.getProject());
-            var childNode = new MessageNode<>("Local port " + port + " exposed as service " + serviceName, node);
+            var childNode = new LocalServiceNode("Local port " + port + " exposed as service " + serviceName, node);
             node.addChild(childNode);
             var service = new RemoteDevelopmentService(logger, node.getParent().getClient(), config);
             service.start().handle((res, err) -> {
