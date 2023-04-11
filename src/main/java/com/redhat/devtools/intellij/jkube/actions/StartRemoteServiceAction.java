@@ -54,7 +54,7 @@ public class StartRemoteServiceAction extends StructureTreeAction implements Dum
                     anActionEvent.getProject());
             var service = new RemoteDevelopmentService(logger, node.getParent().getParent().getParent().getClient(),
                     config);
-            var handler = new RemoteServiceHandler(service, logger, remoteService.getLocalPort());
+            var handler = new ServiceHandler(service, logger, remoteService.getLocalPort());
             node.setHandler(handler);
             handler.start().handle((res, err) -> {
                 node.setHandler(null);

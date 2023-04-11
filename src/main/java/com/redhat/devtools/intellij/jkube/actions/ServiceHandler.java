@@ -5,12 +5,12 @@ import org.eclipse.jkube.kit.remotedev.RemoteDevelopmentService;
 
 import java.util.concurrent.CompletableFuture;
 
-public class RemoteServiceHandler {
+public class ServiceHandler {
     private final RemoteDevelopmentService service;
     private final TerminalLogger logger;
     private final int port;
 
-    public RemoteServiceHandler(RemoteDevelopmentService service, TerminalLogger logger, int port) {
+    public ServiceHandler(RemoteDevelopmentService service, TerminalLogger logger, int port) {
         this.service = service;
         this.logger = logger;
         this.port = port;

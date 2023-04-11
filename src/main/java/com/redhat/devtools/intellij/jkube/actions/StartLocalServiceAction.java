@@ -45,7 +45,8 @@ public class StartLocalServiceAction extends StructureTreeAction implements Dumb
             var childNode = new LocalServiceNode("Local port " + port + " exposed as service " + serviceName, node);
             node.addChild(childNode);
             var service = new RemoteDevelopmentService(logger, node.getParent().getClient(), config);
-            service.start().handle((res, err) -> {
+            var handler = new ServiceHandler(service, logger, port);
+            handler.start().handle((res, err) -> {
                 node.removeChild(childNode);
                 if (err != null) {
                     Messages.showErrorDialog(anActionEvent.getProject(), "Can't expose local port " + port +

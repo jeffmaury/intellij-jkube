@@ -1,12 +1,12 @@
 package com.redhat.devtools.intellij.jkube.window;
 
-import com.redhat.devtools.intellij.jkube.actions.RemoteServiceHandler;
+import com.redhat.devtools.intellij.jkube.actions.ServiceHandler;
 import io.fabric8.kubernetes.api.model.ServicePort;
 
 public class PortNode implements Node<ServiceNode> {
     private final ServiceNode parent;
     private final int port;
-    private RemoteServiceHandler handler;
+    private ServiceHandler handler;
 
     private PortNode(int port, ServiceNode parent) {
         this.port = port;
@@ -37,12 +37,12 @@ public class PortNode implements Node<ServiceNode> {
         return parent;
     }
 
-    public void setHandler(RemoteServiceHandler handler) {
+    public void setHandler(ServiceHandler handler) {
         this.handler = handler;
         getParent().getParent().getParent().getStructure().fireModified(this);
     }
 
-    public RemoteServiceHandler getHandler() {
+    public ServiceHandler getHandler() {
         return handler;
     }
 }
