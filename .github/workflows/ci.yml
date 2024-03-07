@@ -21,7 +21,7 @@ jobs:
           echo ${{ github.event.number }} > ./prInfo/PR
           echo ${{ github.base_ref }} > ./prInfo/base_ref
           echo ${{ github.head_ref }} > ./prInfo/head_ref
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: prInfo
           path: prInfo/
@@ -44,7 +44,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build --continue
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ matrix.os }}-test-reports
@@ -85,7 +85,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew integrationTest --continue
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: linux-integration-test-reports
