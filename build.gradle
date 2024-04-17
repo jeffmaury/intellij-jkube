@@ -15,8 +15,8 @@ repositories {
     maven { url 'https://packages.jetbrains.team/maven/p/ij/intellij-dependencies' }
 }
 
-sourceCompatibility = '11'
-targetCompatibility = '11'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 intellij {
     version = ideaVersion //for a full list of IntelliJ IDEA releases please see https://www.jetbrains.com/intellij-repository/releases
@@ -89,9 +89,9 @@ task integrationUITest(type: Test) {
 dependencies {
     implementation(
             'org.eclipse.jkube:jkube-kit-remote-dev:1.16.2',
-            'com.redhat.devtools.intellij:intellij-common:1.9.3')
+            'com.redhat.devtools.intellij:intellij-common:1.9.4')
     testImplementation(
-            'com.redhat.devtools.intellij:intellij-common:1.9.3:test',
+            'com.redhat.devtools.intellij:intellij-common:1.9.4:test',
             'com.redhat.devtools.intellij:intellij-common-ui-test-library:0.3.0',
             "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
             "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
