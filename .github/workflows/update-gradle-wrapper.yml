@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Update Gradle Wrapper
-        uses: gradle-update/update-gradle-wrapper-action@44ab34cfc83b16a56666426e78c53741a5251ccf
+        uses: gradle-update/update-gradle-wrapper-action@e4ab37e5dd6e5d8787206d75f818f7dfefc37075
         with:
           repo-token: ${{ secrets.GRADLE_UPDATE_PAT }}
           pr-title-template: 'chore(deps-dev): Bump Gradle Wrapper from %sourceVersion% to %targetVersion%'
