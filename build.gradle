@@ -92,7 +92,7 @@ dependencies {
             'com.redhat.devtools.intellij:intellij-common:1.9.6')
     testImplementation(
             'com.redhat.devtools.intellij:intellij-common:1.9.6:test',
-            'com.redhat.devtools.intellij:intellij-common-ui-test-library:0.4.2',
+            'com.redhat.devtools.intellij:intellij-common-ui-test-library:0.4.3',
             "org.junit.jupiter:junit-jupiter-engine:${junitVersion}",
             "org.junit.jupiter:junit-jupiter-api:${junitVersion}",
             "org.junit.jupiter:junit-jupiter:${junitVersion}")
