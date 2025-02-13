@@ -64,7 +64,7 @@ jobs:
           java-version: 17
           distribution: 'temurin'
           cache: 'gradle'
-      - uses: engineerd/setup-kind@aa272fe2a7309878ffc2a81c56cfe3ef108ae7d0 #v0.5.0
+      - uses: engineerd/setup-kind@71e45b960fc8dd50b4aeabf6eb6ef2ca0920b4c1 #v0.6.2
         name: Start cluster
         with:
           version: v0.26.0
